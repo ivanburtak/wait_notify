@@ -14,47 +14,47 @@ public class Dispatcher {
 		
 		Pipeline<FileData> pipeline = new Pipeline<>();
 
-        Thread counterThread = new Thread(new SpaceCounter(filenames, pipeline));
-        Thread processorThread = new Thread(new LetterCapitalizer(pipeline));
+		Thread counterThread = new Thread(new SpaceCounter(filenames, pipeline));
+		Thread processorThread = new Thread(new LetterCapitalizer(pipeline));
 
-        counterThread.start();
-        processorThread.start();
+		counterThread.start();
+		processorThread.start();
 
-        counterThread.join();
-        processorThread.join();
-        System.out.printf("%-25s %d ns%n", "Pipeline time: ", Benchmark.end());
+		counterThread.join();
+		processorThread.join();
+		System.out.printf("%-25s %d ns%n", "Pipeline time: ", Benchmark.end());
 		
 		
 		Benchmark.begin();
 		
 		List<Thread> threads = new ArrayList<>();
 		Thread thread;
-        for (String filename : filenames) {
-            thread = new Thread(() -> {
-                long spaceCount = FileController.countSpaces(filename);
-                if (spaceCount == -1) {
-                	System.err.println("Skipping file '" + filename + "' due to an error.");
-                	return;
-                }
-                
-    			switch (FileController.getCapitalizeMode(spaceCount)) {
-    			case LAST_LETTER:
-    				FileController.capitalizeLastLetters(filename);
-    				break;
-    			case FIRST_LETTER:
-    				FileController.capitalizeFirstLetters(filename);
-    				break;
-    			} 
-            });
-            threads.add(thread);
-            thread.start();
-        }
+		for (String filename : filenames) {
+			thread = new Thread(() -> {
+				long spaceCount = FileController.countSpaces(filename);
+				if (spaceCount == -1) {
+					System.err.println("Skipping file '" + filename + "' due to an error.");
+					return;
+				}
+				
+				switch (FileController.getCapitalizeMode(spaceCount)) {
+				case LAST_LETTER:
+					FileController.capitalizeLastLetters(filename);
+					break;
+				case FIRST_LETTER:
+					FileController.capitalizeFirstLetters(filename);
+					break;
+				} 
+			});
+			threads.add(thread);
+			thread.start();
+		}
 
-        for (Thread t : threads) {
-        	t.join();
-        }
-        
-        System.out.printf("%-25s %d ns%n", "Classic Parallel time: ", Benchmark.end());
+		for (Thread t : threads) {
+			t.join();
+		}
+		
+		System.out.printf("%-25s %d ns%n", "Classic Parallel time: ", Benchmark.end());
 	}
 }
 

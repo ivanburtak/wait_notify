@@ -31,11 +31,11 @@ public class FileController {
 		return spaceCount % 2 == 0 ? CapitalizeMode.LAST_LETTER : CapitalizeMode.FIRST_LETTER;
 	}
 	
-	public static void capitalizeFirstLetters(String inputFilename) {
-		String outputFilename = "output_" + inputFilename;
+	public static void capitalizeFirstLetters(final String inputFilename) {
+		final String outputFilename = "output_" + inputFilename;
 		try (
-			BufferedReader reader = new BufferedReader(new FileReader(inputFilename));
-			BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilename))
+			final BufferedReader reader = new BufferedReader(new FileReader(inputFilename));
+			final BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilename))
 		) {
 			String line;
 			boolean delimiterSeen;
@@ -43,7 +43,7 @@ public class FileController {
 			char ch;
 			while ((line = reader.readLine()) != null) {
 				charArray = line.toCharArray();
-				// Щоб завжди капіталізувати першу літеру
+				// Щоб завжди збільшувати перший символ нового рядка(рахуємо початок рядку за роздільник)
 				delimiterSeen = true;
 				for (int i = 0; i < charArray.length; i++) {
 					ch = charArray[i];
@@ -59,7 +59,7 @@ public class FileController {
 						delimiterSeen = true;
 					}
 				}
-				writer.write(new String(charArray));
+				writer.write(charArray);
 				writer.newLine();
 			}
 		} catch (IOException e) {
@@ -91,13 +91,13 @@ public class FileController {
 						charArray[i - 1] = Character.toUpperCase(lastCh);
 					}
 				}
-				// Якщо рядок закінчився літерою
+				// Якщо рядок закінчився літерою(рахуємо кінець рядку за роздільник)
 				ch = charArray[charArray.length - 1];
 				if (Character.isAlphabetic(ch)) {
 					charArray[charArray.length - 1] = Character.toUpperCase(ch);
 				}
 				
-				writer.write(new String(charArray));
+				writer.write(charArray);
 				writer.newLine();
 			}
 		} catch (IOException e) {

@@ -7,8 +7,10 @@ import java.util.concurrent.ExecutionException;
 
 public class Dispatcher {
 	public static void main(String[] args) throws InterruptedException, ExecutionException {
-		String[] filenames = {"file1", "file2", "file3"};
-		
+		// String[] filenames = {"small", "small", "small"};
+		// String[] filenames = {"medium", "medium", "medium"};
+		// String[] filenames = {"large", "large", "large"};
+		String[] filenames = {"small", "medium", "large"};
 		
 		Benchmark.begin();
 		
@@ -22,6 +24,7 @@ public class Dispatcher {
 
 		counterThread.join();
 		processorThread.join();
+		
 		System.out.printf("%-25s %d ns%n", "Pipeline time: ", Benchmark.end());
 		
 		
@@ -49,12 +52,13 @@ public class Dispatcher {
 			threads.add(thread);
 			thread.start();
 		}
-
+		
 		for (Thread t : threads) {
 			t.join();
 		}
 		
 		System.out.printf("%-25s %d ns%n", "Classic Parallel time: ", Benchmark.end());
+		
 	}
 }
 
